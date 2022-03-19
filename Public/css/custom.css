@@ -1,0 +1,5 @@
+#modalBody{
+    height: calc(100vh - 150px) !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

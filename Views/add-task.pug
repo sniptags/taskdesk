@@ -1,0 +1,22 @@
+extend ./partials/layout-main.pug
+block main-content 
+    .row
+        .col-lg-8.center.p-50.b-r-6
+            form( action="/task" method='post')
+                .form-group
+                    label(for='taskName') Task Name*
+                    input#taskName.form-control(aria-describedby='taskName' name="taskName" placeholder='Enter Task Name' type='text' required)
+                .form-group
+                    label(for='description') 
+                    textarea#comments.form-control(placeholder='Task Comments' name="comment")
+                .form-group 
+                    label Collection 
+                        select(name='taskCollection')
+                            Option Select a Collection(optional)
+                            each collection in collections
+                                option(value=collection._id) #{collection.collectionName}
+                .form-group 
+                    label Deadline*
+                        input.form-control(type="date" name="deadline") 
+                button.btn.m-t-30.mt-3.btn-secondary(type='submit') Create
+                .line

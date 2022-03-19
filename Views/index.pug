@@ -1,0 +1,35 @@
+extend ./partials/layout-login-signup.pug
+block main-content
+    section
+        .container
+            .row
+                .col-lg-5
+                    h3.m-t-0 Welcome to
+                        .text-medium Task Desk
+                    p.lead
+                        |&ldquo;Task Desk&rdquo; is an effective task manager platform that allows you to create new projects,add new tasks and assign tasks to certain Team members.It allows you to mark the tasks as urgernt which are approaching the deadline soon.
+                    a.btn.btn-secondary(href='/user/signup') Sign Up Now
+                .col-lg-7
+                    .container
+                        div
+                            .row
+                                .col-lg-12.center.p-50.background-white.b-r-6
+                                    h3 Login to your Account
+                                    form#signinForm.form-validate
+                                        .form-group
+                                            label.sr-only Username or Email
+                                            input.form-control(type='text' id="email" placeholder='Email' required)
+                                        .form-group.m-b-5
+                                            label.sr-only Password
+                                            input.form-control(type='password' id="password" placeholder='Password' required)
+                                        .form-group.form-inline.text-left
+                                            .form-check
+                                            label
+                                                input(type='checkbox')
+                                                small.m-l-10  Remember me
+                                        .text-left.form-group
+                                            button.btn.btn-secondary#signinButton Login
+                                        p.small
+                                        | Don&apos;t have an account yet? 
+block scripts 
+    <script src='/js/login.js'></script>

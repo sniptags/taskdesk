@@ -1,0 +1,31 @@
+extend ./partials/layout-login-signup.pug
+block main-content
+    section.fullscreen(style='background-image: url(/images/signup-background.jpg)')
+        .container.container-fullscreen
+            .text-middle
+                .text-center
+                    a.text-light.text-md(href='index.html') TaskDesk
+                .row
+                    .col-lg-7.center.p-30.background-white.b-r-6
+                        .row 
+                            .col-lg-12.m-t-20.m-b-20
+                                h3 Start Managing Your Tasks
+                                p
+                                |  If you are a returning customer please login
+                                a(href='/') 
+                                    | here
+                            form#signupForm
+                                .col-lg-12.form-group
+                                    label.sr-only Name
+                                    input.form-control.form-control-lg(type='text' id='name' value='' placeholder='Enter Your Name' required)
+                                .col-lg-12.form-group
+                                    label.sr-only Email
+                                    input.form-control.form-control-lg(type='email' value='' id="email" placeholder='Enter Your Email' required)
+                                .col-lg-12.form-group
+                                    label.sr-only Password
+                                    input.form-control.form-control-lg(type='password' id="password" value='' placeholder='Password' required)
+                                .col-lg-12.form-group
+                                    button.btn.btn-secondary#signupButton Register New Account 
+                                    a.btn.btn-secondary.m-l-10(type='button' href="/") Sign In
+block scripts 
+    script(src='/js/signup.js')

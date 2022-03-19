@@ -1,0 +1,118 @@
+extend ./partials/layout-main.pug
+block main-content 
+    section#page-content.sidebar-right
+        hr
+        .container-fluid
+            .row
+                // content
+                .col-lg-3.sidebar.text-center
+                    if user.avatar
+                        img.avatar.avatar-xl(src='/user/avatar')
+                    else 
+                        img.avatar.avatar-xl(src='/images/avatar.png')
+                    br
+                    a#changeAvatar(href="javascript:changeAvatarDisplay()") Change Avatar
+                    input#uploadAvatar.d-none(type="file")
+                    button.btn.btn-secondary.d-none#uploadButton(onclick="uploadButton()") Upload
+                    h4.widget-title.text-secondary #{user.name}
+                    hr
+                    .widget.clearfix.widget-categories
+                        ul.list.list-arrow-icons
+                            li
+                                a(title='' href='/tasks') View All Tasks
+                            li
+                                a(title='' href='/task/add') Add New Task
+                            li
+                                a(title='' href='/collection/add') Add New Collection
+                            li
+                                a(title='' href='#') My Team
+                            li
+                                a(title='' href='/user/logout') Logout
+
+
+                .content.col-lg-9
+                    h4.text-center#collectionHeading.text-secondary My Collections
+                    .row
+                        .col-lg-12
+                            table#collectionTable.table.table-bordered.table-hover(style='width:100%')
+                                thead
+                                    tr
+                                    th Name
+                                    th Created At
+                                    th Action
+                                tbody 
+                                    tr 
+                                        td 
+                                        td
+                                        td 
+block scripts 
+    <script src='/datatables/datatables.min.js'></script>
+    script.
+        function activeLoader(){
+            document.getElementById('loader').setAttribute('style',"display:flex!important")
+        }
+        function deactiveLoader(){
+            document.getElementById('loader').setAttribute('style',"display:none!important")    
+        }
+        function changeAvatarDisplay(){
+            document.getElementById("changeAvatar").style.display='none'
+            document.getElementById("uploadAvatar").setAttribute('style',"display:block!important")
+            document.getElementById("uploadButton").setAttribute('style',"display:inline-block!important")
+        }
+        function uploadButton(){
+            activeLoader()
+            var data = new FormData();
+            const image=$('#uploadAvatar')[0].files[0]
+            if(!image|| image.size>3000000){
+                deactiveLoader()
+                return alert("No image Uploaded Or File Size is more tham 1 MB")
+            }
+             data.append( 'upload', $( '#uploadAvatar' )[0].files[0] )
+            $.ajax({
+                url:'/user/avatar',
+                type:'post',
+                contentType:false,
+                processData: false,
+                data:data,
+                success:(result)=>{
+                    console.log(result)
+                    window.location.reload()
+                },
+                errror:(error)=>{
+                    alert('cannot Update')
+                }
+            })
+            deactiveLoader()
+        }
+         function deleteCollection(id){
+        }
+        $( document ).ready(()=>{
+            activeLoader()
+            $('#collectionTable').DataTable({
+                responsive:true,
+                "pageLength": 5,
+                lengthMenu: [5,10,15,20],
+            "ajax":{
+                "url":"/collections",
+                "dataSrc": ""
+            },
+            columns:[
+                   {  data:'collectionName' },
+                   {data:"createdAt",
+                    render:function(data, type, row)
+                    {
+                        return new Date(data).toDateString()
+                    }
+
+                    },
+                   {
+                    data: '_id',
+                    render:function(data, type, row)
+                    {
+                    return `<a class='btn' href='/tasks?taskCollection=${data}'>View</a><button class='btn btn-danger' onclick="deleteCollection('${data}')">Delete</button>`
+                    }
+                 }]
+            })
+            deactiveLoader()
+        })
+       

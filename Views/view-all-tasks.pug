@@ -1,0 +1,214 @@
+extend ./partials/layout-main.pug
+block main-content 
+    section
+        .row#mainRow
+            .col-lg-11.center
+                h3.text-center.text-secondary My Tasks
+                .row
+                    .col-lg-12
+                        .text-right 
+                            a.btn.btn-secondary(href='/task/add') Add New
+                        table#taskTable.table.table-bordered.table-hover(style='width:100%')
+                            thead
+                                tr
+                                    th Title
+                                    th Complete Status 
+                                    th Deadline 
+                                    th Created By
+                                    th Assigned To
+                                    th Action
+                            tbody 
+                                tr 
+                                    td 
+                                    td
+                                    td 
+                                    td
+                                    td
+                                    td
+    #modalComments.modal.no-padding.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+        include ./partials/comments.pug
+    #modalAssign.modal.no-padding.fade(tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+        .modal-dialog.modal-lg(role="document")
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Assign Task to a user
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    .row 
+                        .col-md-8.center
+                            form#assignForm
+                                .input-group
+                                    input.form-control#inputEmailAssign(type='email' required)
+                                    .input-group-append
+                                        button.btn.m-l-5#assignButton Search
+
+                .modal-footar
+                    .text-right
+                        button.btn.btn-danger.m-r-5(data-dismiss='modal' aria-label='Close') Dismiss
+block scripts 
+    <script scr='/bootstrap-switch/bootstrap-switch.min.js' type='text/javascript'></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src='/datatables/datatables.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    script.
+        //- loaders
+        function activeLoader(){
+            document.getElementById('loader').setAttribute('style',"display:flex!important")
+        }
+        function deactiveLoader(){
+            document.getElementById('loader').setAttribute('style',"display:none!important")    
+        }
+        //- loaders end
+        function successAlert(message){
+               $("#mainRow").prepend('<div id="successAlert" class="alert alert-success alert-dismissible fade show mt-2 col-12" role="alert"> \
+                    <strong>Cool!</strong> '+message+'. \
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                            <span aria-hidden="true">&times;</span> \
+                    </button> \
+                    </div>');
+                    $("#successAlert").fadeTo(2500, 500).slideUp(500, function(){
+                        $("#successAlert").alert('close');
+                    });
+        }
+
+        //- Assgn task to users
+        $('#modalAssign').on('show.bs.modal', (e)=>{
+            room=$(e.relatedTarget).attr('data-id')
+        })
+
+        //- Assign Task Button Event
+        document.getElementById('assignButton').addEventListener('click',(e)=>{
+            const validData=document.getElementById('assignForm').checkValidity()
+            if(!validData)
+                return 
+            e.preventDefault()
+            const newUser= {}
+            newUser.email=$('#inputEmailAssign').val()
+            if(!newUser)
+                alert('Please Provide Email')
+            $.ajax({
+                url:`/task/assign/?id=${room}`,
+                data:newUser,
+                method:'post',
+                success:(result)=>{
+                    if(result.success){
+                        if(confirm(`Do you Want to Assign This Task to ${result.user.name} ?`)){
+                        $('#modalAssign').modal('hide')
+                        successAlert(result.message)
+                    }
+                    }
+                },
+                error:(error)=>{
+                    if(error){
+                        $('#modalAssign').modal('hide')
+                        alert(error.responseJSON.message)
+                    }
+                }
+            })
+            
+        })
+        //- Assign End
+
+        //- change task complete status
+        function changeCompletedStatus(id,isChecked){
+            let data={}
+            if(isChecked)
+                data.isCompleted=false 
+            else 
+                data.isCompleted=true 
+            $.ajax({
+                url:`/task/update?id=${id}`,
+                data:data,
+                method:'patch',
+                success:(result)=>{
+                  successAlert(result.message)
+                },
+                error:(e)=>{
+                    alert('Failed to Update Task Status')
+                }
+            })
+        }
+        //- End Status change
+
+        //- Delete Task
+        function deleteTask(id){
+            console.log(id)
+            if(confirm("Are you sure you want to delete this Task?")){
+                $.ajax({
+                    url:`/task/delete?id=${id}`,
+                    method:'delete',
+                    success:(result)=>{
+                        console.log(result)
+                    },
+                    error:(error)=>{
+                        console.log(error)
+                    }
+                })
+            }
+        }
+        
+        //- Get Tasks On loading
+        $( document ).ready(()=>{
+            activeLoader()
+            const {taskCollection} = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+            });
+            console.log(taskCollection)
+            let taskUrl='get-tasks'
+            if(taskCollection)
+            {
+                taskUrl=`/get-tasks?taskCollection=${taskCollection}`
+            }
+            $('#taskTable').DataTable({
+                responsive:true,
+                "pageLength": 5,
+                lengthMenu: [5,10,15,20],
+            "ajax":{
+                "url":taskUrl,
+                "dataSrc": ""
+            },
+            columns:[
+                   {  data:'taskName' },
+                   {data: {},
+                   width:'120px',
+                   render:function(data)
+                        {
+                            var index=0
+                            if(!data.isCompleted)
+                                return `<label class="p-switch switch-color-success"><input   type="checkbox"  onClick="changeCompletedStatus('${data._id}',${data.isCompleted})"/><span class="p-switch-style"></span></label>`
+                            else {
+                                return `<label class="p-switch switch-color-success"><input  type="checkbox" checked onClick="changeCompletedStatus('${data._id}',${data.isCompleted})" /><span class="p-switch-style"></span></label>`
+                            }
+                            index++
+                        }
+                    },
+                   {data:'deadline',
+                   render:function(data){
+                       if(data)
+                            return moment(data, 'YYYY-MM-DD HH:mm:ss').format('MM/DD/YYYY')
+                        else 
+                            return 'No Deadline'
+                   }},
+                   {data:'createdBy.name'},
+                   {data:"assignedTo.name",
+                   render: function(data)
+                {
+                       if(data)
+                            return data 
+                        else 
+                            return "Self"
+                   }},
+                   {
+                    data: '_id',
+                    render:function(data, type, row)
+                    {
+                    return `<a href="#" data-toggle="modal" data-target="#modalComments" data-id=${data}><i class="icon-message-square text-success"> </i> </a><a href="javascript:deleteTask('${data}')">  <i class="icon-trash-2 text-danger"></i></a> <a href="#" data-toggle="modal" data-target="#modalAssign" data-id=${data}><i class="fa fa-share-square"></i></a>`
+                    }
+                    }
+                ]
+            })
+            deactiveLoader()
+        })

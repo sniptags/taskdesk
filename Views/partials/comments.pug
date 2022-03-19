@@ -1,0 +1,27 @@
+.modal-dialog.modal-lg(role="document")
+    .modal-content
+        .modal-header
+            h5#exampleModalLabel.modal-title Comments
+            button.close(type='button' data-dismiss='modal' aria-label='Close')
+                span(aria-hidden='true') &times;
+        .modal-body#modalBody
+            .row 
+                .col-md-8.center
+                    #comments
+
+        .modal-footar
+            form#messageForm
+                .input-group.p-5        
+                    input.form-control#input-message(autocomplete='off')
+                    .input-group-append
+                        button.btn.m-l-5 Send
+
+        script(id='messageTemplate' type='text/html')
+                        .comment-list
+                            // Comment
+                            #comment.comment
+                                .image
+                                    img.avatar(src='{{{image}}}')
+                                span {{name}} {{date}}
+                                .text_holder
+                                    p {{message}}

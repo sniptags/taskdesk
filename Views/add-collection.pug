@@ -1,0 +1,12 @@
+extend ./partials/layout-main.pug
+block main-content 
+    .container
+        .row 
+            .col-lg-6.center.p-50.background-white.b-r-6
+                h4.text-secondary.text-center Add New Collection
+                form#collectionForm(action='/collection/add' method='post')
+                    .form-group
+                        label.sr-only Collection Name
+                        input.form-control(type='text' name="collectionName" placeholder='Collection Name')
+                    .text-left.form-group
+                        button.btn-secondary.btn#addCollectionButton(type='submit') Add

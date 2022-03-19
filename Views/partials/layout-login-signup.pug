@@ -1,0 +1,47 @@
+doctype html
+head
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    meta(http-equiv='content-type' content='text/html; charset=utf-8')
+    meta(name='task-desk' content='INSPIRO')
+    link(rel='icon' type='image/png' href='images/favicon.png')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    // Document title
+    title #{title}
+    // Stylesheets & Fonts
+    link(href='/css/plugins.css' rel='stylesheet')
+    link(href='/css/style.css' rel='stylesheet')
+    style.
+        #loader.active {
+                    z-index: 99999;
+                    position: fixed;
+                    width: 100%;
+                    height: 100%;
+                    background: #E4E5E7 ;
+                    background-size: 100px 100px;
+                    opacity: 1;
+                    display: none;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+            }
+// Body Inner
+body
+    .body-inner
+        #loader.active
+            .loader
+                .loader-inner.pacman
+                    div
+                    div
+                    div
+                    div
+                    div
+        // LOGO TEXT
+        nav.navbar.navbar-expand-lg.navbar-dark.mb-3.bg-dark
+            a.navbar-brand(href='#') Taskdesk
+            button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+        block main-content 
+    
+    include ./footer.pug
+    block scripts

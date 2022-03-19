@@ -1,0 +1,30 @@
+nav.navbar.navbar-expand-lg.navbar-dark.mb-3.bg-dark
+    a.navbar-brand(href='/') Taskdesk
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+            li.nav-item
+                a.nav-link(href='/user/profile')
+                    | Home 
+                    span.sr-only (current)
+            li.nav-item.dropdown
+                a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                    | Tasks
+                .dropdown-menu(aria-labelledby='navbarDropdown')
+                    a.dropdown-item(href='/task/add') Add Task
+                    a.dropdown-item(href='/tasks') My Tasks
+            li.nav-item.dropdown
+                a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                    | Collections
+                .dropdown-menu(aria-labelledby='navbarDropdown')
+                    a.dropdown-item(href='/collection/add') Add Collection
+                    a.dropdown-item(href='/user/profile') My Collections
+        .nav-item.text-light
+            a.nav-link(href='/user/logout') 
+                i.icon-log-out  This Device
+        .nav-item.text-light
+            a.nav-link(href='/user/logout?account=all') 
+                i.icon-log-out  All
+
+                

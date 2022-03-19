@@ -9,7 +9,6 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    age:Number,
     password:{
         type:String,
         required:true
@@ -22,7 +21,7 @@ const userSchema=new mongoose.Schema({
         unique:true,
         validate(value){
             if(!validator.isEmail(value))
-                throw new Error('not a vliad email')
+                throw new Error('not a valid email')
         }
     },
     tokens:[{
@@ -50,7 +49,12 @@ userSchema.pre('save',async function(next){
 userSchema.virtual('tasks',{
     ref:'Task',
     localField:'_id',
-    foreignField:'userId'
+    foreignField:'createdBy'
+})
+userSchema.virtual('taskAssigned',{
+    ref:'Task',
+    localField:'_id',
+    foreignField:'assignedTo'
 })
 
 // delete task when user is deleted
