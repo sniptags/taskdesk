@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(publicDirectoryPath))
 app.set('view engine', 'pug')
-app.set('views',(path.join(__dirname, 'views')));
+app.set('views',(path.join(__dirname, 'Views')));
 app.use(cookieParser())
 // routers
 app.use(userRouter)
