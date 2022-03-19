@@ -10,12 +10,13 @@ const collectionRouter=require('./Routes/collection')
 
 // set public directory and view engine templete
 const path= require('path')
-const publicDirectoryPath= path.join(__dirname,'public')
+const publicDirectoryPath= path.join(__dirname,'Public')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(publicDirectoryPath))
 app.set('view engine', 'pug')
+app.set('views',(path.join(__dirname, 'views')));
 app.use(cookieParser())
 // routers
 app.use(userRouter)
