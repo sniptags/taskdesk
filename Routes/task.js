@@ -48,7 +48,6 @@ router.get('/get-tasks',auth,async (req,res)=>{
     }],
         match
         })
-    console.log(req.user.tasks)
     await req.user.populate({path:'taskAssigned',
         populate:[{
             path:'createdBy',select:'name'
