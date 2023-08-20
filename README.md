@@ -24,6 +24,8 @@ Taskdesk is Express based Application Originally created in 2021.Application pro
 ### Starting the dev
 - Fork the repository
 - npm install to install the dependencies
+- create .env file in root using env.text template
+- create test.env file in root using testenv.text template,only change is it points to the test database in mongo URI
 - npm run dev to run application in local machine
 - npm test to run application in testing
 
